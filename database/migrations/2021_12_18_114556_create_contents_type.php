@@ -16,7 +16,7 @@ class CreateContentsType extends Migration
         Schema::create('contents_type', function (Blueprint $table) {
             $table->id();
             $table->enum('type',['page','blog']);
-            $table->longText('template');
+            $table->mediumText('template');
             $table->timestamps();
         });
     }

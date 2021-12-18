@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ContentToType extends Model
 {
     use HasFactory;
+
+    protected $table = 'contents_to_type';
+
+    protected $fillable = [
+        'content_id',
+        'type_id'
+    ];
 }
