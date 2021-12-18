@@ -20,7 +20,7 @@ class CreateContentsLog extends Migration
             $table->string('route_name');
             $table->unsignedInteger('content_id');
             $table->foreign('content_id')->references('id')->on('contents');
-            $table->longText('new_content');
+            $table->longText('content');
             $table->timestamps();
         });
     }
