@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContentController;
-use App\Http\Controllers\ContentsTypeController;
+use App\Http\Controllers\ContentTypesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,29 +19,33 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('user')->group(function () {
     Route::any('/', [UserController::class, 'read'])->name('user.read');
+    Route::any('create', [UserController::class, 'create'])->name('user.create');
     Route::any('update/{id}', [UserController::class, 'update'])->name('user.update');
-    Route::any('create/{id}', [UserController::class, 'create'])->name('user.create');
     Route::any('delete/{id}', [UserController::class, 'delete'])->name('user.delete');
+    Route::any('view/{id}', [UserController::class, 'view'])->name('user.view');
 });
 
 Route::prefix('contents')->group(function () {
 
-    Route::prefix('type')->group(function () {
-        Route::any('/', [ContentsTypeController::class, 'read'])->name('type.read');
-        Route::any('create/{id}', [ContentsTypeController::class, 'create'])->name('type.create');
-        Route::any('update/{id}', [ContentsTypeController::class, 'update'])->name('type.update');
-        Route::any('delete/{id}', [ContentsTypeController::class, 'delete'])->name('type.delete');
+    Route::prefix('types')->group(function () {
+        Route::any('/', [ContentTypesController::class, 'read'])->name('types.read');
+        Route::any('create', [ContentTypesController::class, 'create'])->name('types.create');
+        Route::any('update/{id}', [ContentTypesController::class, 'update'])->name('types.update');
+        Route::any('delete/{id}', [ContentTypesController::class, 'delete'])->name('types.delete');
+        Route::any('view/{id}', [ContentTypesController::class, 'view'])->name('types.view');
     });
 
         Route::any('/', [ContentController::class, 'read'])->name('contents.read');
-        Route::any('create/{id}', [ContentController::class, 'create'])->name('contents.create');
+        Route::any('create', [ContentController::class, 'create'])->name('contents.create');
         Route::any('update/{id}', [ContentController::class, 'update'])->name('contents.update');
         Route::any('delete/{id}', [ContentController::class, 'delete'])->name('contents.delete');
+        Route::any('view/{id}', [ContentController::class, 'view'])->name('type.view');
 });
 
 Route::prefix('contentstotype')->group(function () {
     Route::any('/', [UserController::class, 'read'])->name('contentstotype.read');
-    Route::any('create/{id}', [UserController::class, 'create'])->name('contentstotype.create');
+    Route::any('create', [UserController::class, 'create'])->name('contentstotype.create');
     Route::any('update/{id}', [UserController::class, 'update'])->name('contentstotype.update');
     Route::any('delete/{id}', [UserController::class, 'delete'])->name('contentstotype.delete');
 });
+

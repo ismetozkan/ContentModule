@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Content;
 use App\Models\ContentToType;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
 ////LOG TUTULACAK. YAPILMADI DAHA. TRAİT YAZ T-LOG ADINDA. LOG FONKSİYONUNA ARRAY GÖNDER PARAMETRE
@@ -12,11 +13,25 @@ use Illuminate\Support\Facades\Validator;
 
 class ContentController extends Controller
 {
+    public function read(){
+        $model = Content::all();
+        return $model->count() > 0
+            ? response()->json([
+                'code' => 200,
+                'message' => 'Başarılı',
+                'result' => $model->all()
+            ],Response::HTTP_OK)
+            : response()->json([
+                'code' => 400,
+                'message' => 'Gösterilecek içerik bulunamadı.',
+            ],Response::HTTP_BAD_REQUEST);
+    }
 
     public function create(Request $request){
         $rules = [
-            'description' => 'required|string',
-            'slug' => 'required|string'
+            'title' => 'required|string',
+            'slug' => 'required|string',
+            'content'=>'required|string'
         ];
 
         $validator = Validator::make($request->all(),$rules);
@@ -29,37 +44,24 @@ class ContentController extends Controller
             ]);
         }else{
                 $result = Content::create([
-                    'description' => $request->get('description'),
-                    'slug' => $request->get('slug')
+                    'title' => $request->get('title'),
+                    'slug' => $request->get('slug'),
+                    'content'=>$request->get('content')
                 ]);
 
                 return $result ?
                     response()->json([
                     'code' => 200,
-                    'message' => "Content oluşturma işleminiz başarılı bir şekilde gerçekleştirilmiştir.",
+                    'message' => "Başarılı",
                     'result' => $result
-                ]) :
+                ],Response::HTTP_OK) :
                     response()->json([
                         'code' => 400,
-                        'message' => "Contentoluşturma işleminiz sırasında bir hata ile karşılaştık.Lütfen daha sonra tekrar deneyiniz."
-                    ],400);
+                        'message' => "Başarısız"
+                    ],Response::HTTP_BAD_REQUEST);
 
         }
 
-    }
-
-    public function read(){
-        $model = Content::all();
-        return $model->count() > 0
-            ? response()->json([
-                'code' => 200,
-                'message' => 'Başarılı',
-                'result' => $model->all()
-            ],200)
-            : response()->json([
-                'code' => 200,
-                'message' => 'Gösterilecek kategori bulunamadı.',
-            ],200);
     }
 
     public function view(Request $request,$id){
@@ -71,15 +73,16 @@ class ContentController extends Controller
                 'result' => $model
             ]) :
                 response()->json([
-                    'code' => 200,
+                    'code' => 400,
                     'message' => 'Gösterilecek veri bulunamadı.'
                 ]);
     }
 
     public function update(Request $request, $id){
         $rules = [
-            'description' => 'nullable|string',
+            'title' => 'nullable|string',
             'slug' => 'nullable|string',
+            'content' => 'nullable|string',
         ];
 
         $validator = Validator::make($request->all(),$rules);
@@ -106,39 +109,15 @@ class ContentController extends Controller
         }
     }
 
-    public function delete(Request $request,$id){
-        $rules = [
-            'description' => 'nullable|string',
-            'slug' => 'nullable|string',
-        ];
+    public function delete(Request $request,$id)
+    {
+        $result=Content::where('id',$id)->delete();
 
-        $validator = Validator::make($request->all(),$rules);
-
-        if($validator->fails())
-        {
-            return response()->json([
-                'code' => 400,
-                'message' => 'Lütfen formunuzu kontrol ediniz.',
-                'result' => $validator->errors()
-            ]);
-        }else{
-            $result = Content::where('id',$id)->delete();
-
-            if($result)
-            {
-                ContentToType::where('content_id',$id)->delete();
-
-                return response()->json([
-                    'code' => 200,
-                    'message' => 'Content silme işleminiz başarılı bir şekilde gerçekleştirilmiştir.'
-                ],200);
-            }else{
-                return response()->json([
-                    'code' => 400,
-                    'message' => 'Content silme işleminiz sırasında bir hata ile karşılaştık.Lütfen daha sonra tekrar deneyiniz.'
-                ],400);
-            }
-        }
-
+        return response()->json([
+            'code' => $result  ? 200 : 400,
+            'message' => $result ? 'Başarılı' : 'Başarısız',
+        ],$result ? 200 : 400);
     }
+
+
 }

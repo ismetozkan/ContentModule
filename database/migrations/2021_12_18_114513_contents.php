@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateContentsType extends Migration
+class Contents extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateContentsType extends Migration
      */
     public function up()
     {
-        Schema::create('contents_type', function (Blueprint $table) {
+        Schema::create('contents', function (Blueprint $table) {
             $table->id();
-            $table->enum('type',['page','blog']);
-            $table->mediumText('template');
+            $table->string('title');
+            $table->string('slug');
+            $table->mediumText('content');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateContentsType extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contents_type');
+        Schema::dropIfExists('contents');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateContentsLog extends Migration
+class ContentsLog extends Migration
 {
     /**
      * Run the migrations.
@@ -15,12 +15,12 @@ class CreateContentsLog extends Migration
     {
         Schema::create('contents_log', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('route_name');
-            $table->unsignedInteger('content_id');
+            $table->unsignedBigInteger('content_id');
             $table->foreign('content_id')->references('id')->on('contents');
-            $table->longText('content');
+            $table->string('route_name');
+            $table->mediumText('log');
             $table->timestamps();
         });
     }
