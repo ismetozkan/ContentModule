@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Schema;
 class ContentsToTypes extends Migration
 {
 
-    //denemes
     /**
      * Run the migrations.
      *
