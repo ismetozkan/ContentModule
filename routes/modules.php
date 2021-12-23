@@ -4,6 +4,6 @@ $modules = [
   'user',
   'contents',
   'contents/types',
-    'contentstotype'
+    'contentstotypes'
 
 ];
