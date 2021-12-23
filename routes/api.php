@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Route::prefix('user')->group(function () {
     Route::any('/', [UserController::class, 'read'])->name('user.read');
     Route::any('create', [UserController::class, 'create'])->name('user.create');
