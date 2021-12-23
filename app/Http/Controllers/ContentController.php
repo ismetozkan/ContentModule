@@ -49,11 +49,11 @@ class ContentController extends Controller
                     'slug' => $request->get('slug'),
                     'content'=>$request->get('content'),
                 ]);
-                /* //ROUTE NAME KOMUTUU
+                /* //ROUTE NAME KOMUTU
                 $route=$request->route()->getName();
                 echo  $route;
                 */
-            $res=$result->save();
+            $result->save();
             $result->contentToType()->create([
                 'content_id' => $result->id,
                 'type_id' => $request->get('type_id')
