@@ -14,4 +14,9 @@ class Content extends Model
         'slug',
         'content'
     ];
+
+    public function contentToType()
+    {
+        return $this->belongsTo(ContentToType::class,'id','content_id');
+    }
 }

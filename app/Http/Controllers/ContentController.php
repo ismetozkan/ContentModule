@@ -43,11 +43,19 @@ class ContentController extends Controller
                 'result' => $validator->errors()
             ]);
         }else{
-                $result = Content::create([
+                $result = new Content();
+                $result->fill([
                     'title' => $request->get('title'),
                     'slug' => $request->get('slug'),
-                    'content'=>$request->get('content')
+                    'content'=>$request->get('content'),
+
                 ]);
+
+            $result->save();
+            $result->contentToType()->create([
+                'content_id' => $result->id,
+                'type_id' => $request->get('type_id')
+            ]);
 
                 return $result ?
                     response()->json([

@@ -15,9 +15,4 @@ class ContentToType extends Model
         'content_id',
         'type_id'
     ];
-
-   public function type()
-   {
-       return $this->hasOne(ContentTypes::class, 'id','type_id');
-   }
 }

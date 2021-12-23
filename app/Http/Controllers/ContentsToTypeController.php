@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Content;
 use App\Models\ContentToType;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +29,14 @@ class ContentsToTypeController extends Controller
 
     public function create(Request $request)
     {
-
+        $res = new Content();
+        $res->fill([
+            'title' => $request->get('title')
+        ]);
+        $result = $res->save();
+        $res->contentToType()->create([
+            'content_id' => $result->id,
+            'type_id' => $request->get('type_id')
+        ]);
     }
 }
