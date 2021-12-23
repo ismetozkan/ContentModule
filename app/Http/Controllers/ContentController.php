@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Content;
-use App\Models\ContentToType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -28,6 +27,7 @@ class ContentController extends Controller
     }
 
     public function create(Request $request){
+
         $rules = [
             'title' => 'required|string',
             'slug' => 'required|string',
@@ -48,9 +48,11 @@ class ContentController extends Controller
                     'title' => $request->get('title'),
                     'slug' => $request->get('slug'),
                     'content'=>$request->get('content'),
-
                 ]);
-
+                /* //ROUTE NAME FONKSİYONU
+                $route=$request->route()->getName();
+                echo  $route;
+                */
             $result->save();
             $result->contentToType()->create([
                 'content_id' => $result->id,
@@ -69,7 +71,6 @@ class ContentController extends Controller
                     ],Response::HTTP_BAD_REQUEST);
 
         }
-
     }
 
     public function view(Request $request,$id){
