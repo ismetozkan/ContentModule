@@ -13,4 +13,5 @@ class ContentTypes extends Model
         'type',
         'template'
     ];
+
 }

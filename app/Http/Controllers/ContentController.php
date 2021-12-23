@@ -119,5 +119,4 @@ class ContentController extends Controller
         ],$result ? 200 : 400);
     }
 
-
 }

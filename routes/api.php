@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\ContentController;
+use App\Http\Controllers\ContentsToTypeController;
 use App\Http\Controllers\ContentTypesController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,9 +43,9 @@ Route::prefix('contents')->group(function () {
 });
 
 Route::prefix('contentstotype')->group(function () {
-    Route::any('/', [UserController::class, 'read'])->name('contentstotype.read');
-    Route::any('create', [UserController::class, 'create'])->name('contentstotype.create');
-    Route::any('update/{id}', [UserController::class, 'update'])->name('contentstotype.update');
-    Route::any('delete/{id}', [UserController::class, 'delete'])->name('contentstotype.delete');
+    Route::any('/', [ContentsToTypeController::class, 'read'])->name('contentstotype.read');
+    Route::any('create', [ContentsToTypeController::class, 'create'])->name('contentstotype.create');
+    Route::any('update/{id}', [ContentsToTypeController::class, 'update'])->name('contentstotype.update');
+    Route::any('delete/{id}', [ContentsToTypeController::class, 'delete'])->name('contentstotype.delete');
 });
 
