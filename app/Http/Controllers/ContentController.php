@@ -61,7 +61,7 @@ class ContentController extends Controller
 
 
                 return $result ?
-                    $this->newLog($request->route()->getName(),"a") &&
+                    $this->newLog($request->route()->getName(),$result['id']) &&
                     response()->json([
                     'code' => 200,
                     'message' => "Başarılı",
