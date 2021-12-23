@@ -15,8 +15,8 @@ class Content extends Model
         'content'
     ];
 
-    public function contentToType()
+    public function logs()
     {
-        return $this->belongsTo(ContentToType::class,'id','content_id');
+        return $this->hasMany(ContentLog::class,'content_id');
     }
 }

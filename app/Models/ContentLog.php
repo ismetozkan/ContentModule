@@ -15,4 +15,12 @@ class ContentLog extends Model
         'content',
         'content_id'
     ];
+
+    public function contents(){
+        return $this->belongsTo(Content::class);
+    }
+
+    public function users(){
+        return $this->belongsTo(User::class);
+    }
 }
