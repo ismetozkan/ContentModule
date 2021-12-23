@@ -49,7 +49,7 @@ class ContentController extends Controller
                     'slug' => $request->get('slug'),
                     'content'=>$request->get('content'),
                 ]);
-                /* //ROUTE NAME FONKSİYONU
+                /* //ROUTE NAME KOMUTU
                 $route=$request->route()->getName();
                 echo  $route;
                 */
