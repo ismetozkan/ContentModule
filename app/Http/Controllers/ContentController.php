@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Library\CLog;
 use App\Models\Content;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ContentController extends Controller
 {
+    use CLog;
     public function read(){
         $model = Content::all();
         return $model->count() > 0
@@ -58,6 +60,8 @@ class ContentController extends Controller
                 'content_id' => $result->id,
                 'type_id' => $request->get('type_id')
             ]);
+
+            $this->newLog("a","a");
 
                 return $result ?
                     response()->json([
