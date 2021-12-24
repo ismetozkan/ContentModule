@@ -31,21 +31,7 @@ Route::prefix('user')->group(function () {
     Route::any('view/{id}', [UserController::class, 'view'])->name('user.view');
 });
 
-Route::prefix('contents')->group(function () {
 
-    Route::prefix('types')->group(function () {
-        Route::any('/', [ContentTypesController::class, 'read'])->name('types.read');
-        Route::any('create', [ContentTypesController::class, 'create'])->name('types.create');
-        Route::any('update/{id}', [ContentTypesController::class, 'update'])->name('types.update');
-        Route::any('delete/{id}', [ContentTypesController::class, 'delete'])->name('types.delete');
-        Route::any('view/{id}', [ContentTypesController::class, 'view'])->name('types.view');
-    });
-});
 
-Route::prefix('contentstotype')->group(function () {
-    Route::any('/', [ContentsToTypeController::class, 'read'])->name('contentstotype.read');
-    Route::any('create', [ContentsToTypeController::class, 'create'])->name('contentstotype.create');
-    Route::any('update/{id}', [ContentsToTypeController::class, 'update'])->name('contentstotype.update');
-    Route::any('delete/{id}', [ContentsToTypeController::class, 'delete'])->name('contentstotype.delete');
-});
+
 
