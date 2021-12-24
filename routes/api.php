@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ContentsToTypeController;
 use App\Http\Controllers\ContentTypesController;
 use App\Http\Controllers\UserController;
@@ -16,6 +15,13 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::prefix('/v1')->group(function (){
+    include "modules.php";
+    foreach ($modules as $module) {
+        include sprintf("modules/%s.php",$module);
+    }
+});
 
 Route::prefix('user')->group(function () {
     Route::any('/', [UserController::class, 'read'])->name('user.read');
@@ -34,12 +40,6 @@ Route::prefix('contents')->group(function () {
         Route::any('delete/{id}', [ContentTypesController::class, 'delete'])->name('types.delete');
         Route::any('view/{id}', [ContentTypesController::class, 'view'])->name('types.view');
     });
-
-        Route::any('/', [ContentController::class, 'read'])->name('contents.read');
-        Route::any('create', [ContentController::class, 'create'])->name('contents.create');
-        Route::any('update/{id}', [ContentController::class, 'update'])->name('contents.update');
-        Route::any('delete/{id}', [ContentController::class, 'delete'])->name('contents.delete');
-        Route::any('view/{id}', [ContentController::class, 'view'])->name('type.view');
 });
 
 Route::prefix('contentstotype')->group(function () {

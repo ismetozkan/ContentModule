@@ -15,6 +15,7 @@ class ContentController extends Controller
 {
     use CLog;
     public function read(){
+        dd("content controller read çağırıldı");
         $model = Content::all();
         return $model->count() > 0
             ? response()->json([
@@ -57,9 +58,7 @@ class ContentController extends Controller
                 'content_id' => $result->id,
                 'type_id' => $request->get('type_id')
             ]);
-
-
-
+            //LOG DENEME
                 return $result ?
                     $this->newLog($request->route()->getName(),$result['id']) &&
                     response()->json([
