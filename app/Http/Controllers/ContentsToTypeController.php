@@ -29,6 +29,7 @@ class ContentsToTypeController extends Controller
 
     public function create(Request $request)
     {
+       /*
         $res = new Content();
         $res->fill([
             'title' => $request->get('title')
@@ -38,5 +39,6 @@ class ContentsToTypeController extends Controller
             'content_id' => $result->id,
             'type_id' => $request->get('type_id')
         ]);
+       */
     }
 }
