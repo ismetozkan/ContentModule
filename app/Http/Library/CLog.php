@@ -7,7 +7,7 @@ use App\Models\ContentLog;
 trait CLog
 {
 
-    public function newLog($user_id,$route,$content_id,$log){
+    public function newLog($user_id,$route,$content_id,$log = null){
         ContentLog::create([
             'user_id' => $user_id,
             'route_name' => $route,
