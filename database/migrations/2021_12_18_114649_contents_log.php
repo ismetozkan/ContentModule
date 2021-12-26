@@ -23,7 +23,7 @@ class ContentsLog extends Migration
             $table->unsignedBigInteger('content_id');
             $table->foreign('content_id')->references('id')->on('contents');
             $table->string('route_name');
-            $table->mediumText('log');
+            $table->mediumText('log')->nullable();
             $table->timestamps();
         });
     }

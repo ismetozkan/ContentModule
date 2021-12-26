@@ -8,14 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-////LOG TUTULACAK. YAPILMADI DAHA. TRAİT YAZ T-LOG ADINDA. LOG FONKSİYONUNA ARRAY GÖNDER PARAMETRE
-
 
 class ContentController extends Controller
 {
     use CLog;
     public function read(){
-        dd("content controller read çağırıldı");
         $model = Content::all();
         return $model->count() > 0
             ? response()->json([
@@ -60,7 +57,6 @@ class ContentController extends Controller
             ]);
             //LOG DENEME
                 return $result ?
-                    $this->newLog($request->route()->getName(),$result['id']) &&
                     response()->json([
                     'code' => 200,
                     'message' => "Başarılı",
