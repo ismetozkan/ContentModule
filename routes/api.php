@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\ContentsToTypeController;
-use App\Http\Controllers\ContentTypesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
