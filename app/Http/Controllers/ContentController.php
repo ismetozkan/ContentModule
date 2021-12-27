@@ -59,6 +59,7 @@ class ContentController extends Controller
                 'type_id' => $request->get('type_id')
             ]);
 
+
                 return $result ?
                     response()->json([
                     'code' => 200,

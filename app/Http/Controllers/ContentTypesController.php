@@ -38,9 +38,16 @@ class ContentTypesController extends Controller
                 'message' => $validator->errors()->messages()
             ], Response::HTTP_BAD_REQUEST );
         } else {
-            $result = ContentTypes::create([
-                'type' => $request->type,
-                'template' => $request->template,
+            $result=new ContentTypes();
+            $result->fill([
+                'type' => $request->get('type'),
+                'template' => $request->get('template'),
+
+            ]);
+            $result->save();
+            $result->typeToLog()->create([
+                'log' => $result->type,
+              //type_id' => $request->get('type_id')
             ]);
 
             return response()->json([

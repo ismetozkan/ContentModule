@@ -9,6 +9,8 @@ class ContentTypes extends Model
 {
     use HasFactory;
 
+    protected $table='content_types';
+
     protected $fillable = [
         'type',
         'template'
@@ -16,7 +18,7 @@ class ContentTypes extends Model
 
     public function typeToLog()
     {
-        return $this->belongsTo(ContentLog::class,'type','log');
+        return $this->belongsTo(ContentLog::class,'log','type');
     }
 
 }
