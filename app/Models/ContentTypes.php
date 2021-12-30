@@ -18,7 +18,7 @@ class ContentTypes extends Model
 
     public function typeToLog()
     {
-        return $this->belongsTo(ContentLog::class,'log','type');
+        return $this->belongsTo(ContentLog::class,'type','log');
     }
 
 }
