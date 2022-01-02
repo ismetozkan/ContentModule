@@ -7,7 +7,7 @@ use GuzzleHttp\Psr7\Request;
 
 trait LogTrait
 {
-    public function newLog($user_id,$route,$content_id ,$log){
+    public function newLog($user_id = null,$route,$content_id ,$log){
         ContentLog::create([
             'user_id' => $user_id,
             'route_name' => $route,
