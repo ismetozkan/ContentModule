@@ -17,6 +17,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::prefix('ysk')->group(function () {
+    Route::any('/', [\App\Http\Controllers\YSKController::class, 'read'])->name('ysk.read');
+    Route::any('create', [\App\Http\Controllers\YSKController::class, 'create'])->name('ysk.create');
+    Route::any('update/{id}', [\App\Http\Controllers\YSKController::class, 'update'])->name('ysk.update');
+    Route::any('delete/{id}', [\App\Http\Controllers\YSKController::class, 'delete'])->name('ysk.delete');
+    Route::any('view/{id}', [\App\Http\Controllers\YSKController::class, 'view'])->name('ysk.view');
+});
+
 Route::prefix('user')->group(function () {
     Route::any('/', [UserController::class, 'read'])->name('user.read');
     Route::any('create', [UserController::class, 'create'])->name('user.create');
@@ -39,7 +47,7 @@ Route::prefix('contents')->group(function () {
         Route::any('create', [ContentController::class, 'create'])->name('contents.create');
         Route::any('update/{id}', [ContentController::class, 'update'])->name('contents.update');
         Route::any('delete/{id}', [ContentController::class, 'delete'])->name('contents.delete');
-        Route::any('view/{id}', [ContentController::class, 'view'])->name('type.view');
+        Route::any('view/{id}', [ContentController::class, 'view'])->name('contents.view');
 });
 
 Route::prefix('contentstotype')->group(function () {

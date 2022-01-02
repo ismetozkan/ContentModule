@@ -16,9 +16,5 @@ class ContentTypes extends Model
         'template'
     ];
 
-    public function typeToLog()
-    {
-        return $this->belongsTo(ContentLog::class,'type','log');
-    }
 
 }

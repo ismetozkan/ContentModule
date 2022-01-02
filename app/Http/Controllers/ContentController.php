@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\LogTrait;
 use App\Models\Content;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ContentController extends Controller
 {
+    use LogTrait;
     public function read(){
         $model = Content::all();
         return $model->count() > 0
@@ -49,27 +51,28 @@ class ContentController extends Controller
                     'slug' => $request->get('slug'),
                     'content'=>$request->get('content'),
                 ]);
-                /* //ROUTE NAME KOMUTU
-                $route=$request->route()->getName();
-                echo  $route;
-                */
-            $result->save();
-            $result->contentToType()->create([
-                'content_id' => $result->id,
-                'type_id' => $request->get('type_id')
-            ]);
 
+            try {
+                $result->save();
+                $this->newLog($request->get('user_id'),$request->route()->getName(),$result->id, json_encode($request->header()));
+            }catch (\Exception $e){
+                return response()->json([
+                    'code' => 400,
+                    'message' => "Başarısız" ,
+                    'error' => $e
+                ],Response::HTTP_BAD_REQUEST);
+            }
 
-                return $result ?
-                    response()->json([
-                    'code' => 200,
-                    'message' => "Başarılı",
-                    'result' => $result
-                ],Response::HTTP_OK) :
-                    response()->json([
-                        'code' => 400,
-                        'message' => "Başarısız"
-                    ],Response::HTTP_BAD_REQUEST);
+            return $result ?
+                response()->json([
+                'code' => 200,
+                'message' => "Başarılı",
+                'result' => $result
+            ],Response::HTTP_OK) :
+                response()->json([
+                    'code' => 400,
+                    'message' => "Başarısız"
+                ],Response::HTTP_BAD_REQUEST);
 
         }
     }
@@ -106,6 +109,8 @@ class ContentController extends Controller
             ]);
         }else{
             $result = Content::where('id',$id)->update($request->all());
+            if($result != 0)
+                $this->newLog($request->get('user_id'),$request->route()->getName(),$result->id, json_encode($request->header()));
 
             return $result
                 ? response()->json([
