@@ -149,7 +149,7 @@ class ContentController extends Controller
         $result=Content::where('id',$id)->first();
         if($result != null){
             $this->newLog($request->get('user_id'),$request->route()->getName(),$id, json_encode($request->header()));
-            $this->delContToType($id);
+            $this->delCont($id);
             $result->delete();
         }
         return response()->json([

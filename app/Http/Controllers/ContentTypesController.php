@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ContentToTypeTrait;
+use App\Http\Traits\LogTrait;
 use App\Models\ContentTypes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -9,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ContentTypesController extends Controller
 {
+    use LogTrait ,ContentToTypeTrait;
     public function read()
     {
         $model= ContentTypes::all();
@@ -47,12 +50,6 @@ class ContentTypesController extends Controller
 
             ]);
             $result->save();
-            $result->typeToLog()->create([
-                'user_id' => $request->get('user_id'),
-                'content_id' => $request->get('content_id'),
-                'route_name'=>$request->route()->getName(),
-                'log' => $result->type,
-            ]);
 
             return response()->json([
                 'code' => $result ? 200 : 400,
@@ -98,15 +95,32 @@ class ContentTypesController extends Controller
 
     public function delete(Request $request,$id)
     {
-        $result=ContentTypes::where('id',$id)->delete();
+        $validator = Validator::make($request->all(),[
+            'user_id' => 'required|integer'
+        ]);
 
+        if($validator->fails())
+        {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Lütfen formunuzu kontrol ediniz.',
+                'result' => $validator->errors()
+            ]);
+        }else{
+        $result=ContentTypes::where('id',$id)->first();
+        if($result != null){
+            $this->newLog($request->get('user_id'),$request->route()->getName(),$id, json_encode($request->header()));
+            $this->delype($id);
+            $result->delete();
+        }
         return response()->json([
             'code' => $result  ? 200 : 400,
             'message' => $result ? 'Başarılı' : 'Başarısız',
         ],$result ? 200 : 400);
+        }
     }
 
-    public function view(Request $request,$id)
+    public function view($id)
     {
         $model = ContentTypes::where('id', $id)->get()->toArray();
         return $model
