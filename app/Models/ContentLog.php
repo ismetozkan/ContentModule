@@ -9,10 +9,15 @@ class ContentLog extends Model
 {
     use HasFactory;
 
+    protected $table='contents_log';
+
     protected $fillable=[
         'user_id',
         'route_name',
         'content',
-        'content_id'
+        'content_id',
+        'log'
     ];
+
+
 }

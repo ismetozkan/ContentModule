@@ -41,13 +41,11 @@ Route::prefix('contents')->group(function () {
         Route::any('create', [ContentController::class, 'create'])->name('contents.create');
         Route::any('update/{id}', [ContentController::class, 'update'])->name('contents.update');
         Route::any('delete/{id}', [ContentController::class, 'delete'])->name('contents.delete');
-        Route::any('view/{id}', [ContentController::class, 'view'])->name('type.view');
+        Route::any('view/{id}', [ContentController::class, 'view'])->name('contents.view');
 });
 
 Route::prefix('contentstotype')->group(function () {
     Route::any('/', [ContentsToTypeController::class, 'read'])->name('contentstotype.read');
-    Route::any('create', [ContentsToTypeController::class, 'create'])->name('contentstotype.create');
     Route::any('update/{id}', [ContentsToTypeController::class, 'update'])->name('contentstotype.update');
-    Route::any('delete/{id}', [ContentsToTypeController::class, 'delete'])->name('contentstotype.delete');
 });
 
