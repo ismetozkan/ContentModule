@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-////LOG TUTULACAK. YAPILMADI DAHA. TRAİT YAZ T-LOG ADINDA. LOG FONKSİYONUNA ARRAY GÖNDER PARAMETRE
 
 
 class ContentController extends Controller
@@ -135,6 +134,18 @@ class ContentController extends Controller
 
     public function delete(Request $request,$id)
     {
+        $validator = Validator::make($request->all(),[
+            'user_id' => 'required|integer'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Lütfen formunuzu kontrol ediniz.',
+                'result' => $validator->errors()
+            ]);
+        }else{
         $result=Content::where('id',$id)->first();
         if($result != null){
             $this->newLog($request->get('user_id'),$request->route()->getName(),$id, json_encode($request->header()));
@@ -146,5 +157,6 @@ class ContentController extends Controller
             'message' => $result ? 'Başarılı' : 'Başarısız',
         ],$result ? 200 : 400);
     }
+        }
 
 }
