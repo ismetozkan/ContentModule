@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ResponseTrait;
 use App\Models\Content;
 use App\Models\ContentToType;
 use Illuminate\Http\Request;
@@ -10,22 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ContentsToTypeController extends Controller
 {
+    use ResponseTrait;
+
     public function read()
     {
         $model = ContentToType::all();
-        return response()->json([
-            'code' => $model->count() > 0
-                ? 200
-                : 400,
-            'message' => $model->count() > 0
-                ? 'Başarılı'
-                : 'Listelenecek öge bulunamadı',
-            'result' => $model->count() > 0
-                ? $model->toArray()
-                : []
-        ],$model->count() > 0
-        ? Response::HTTP_OK
-        : Response::HTTP_BAD_REQUEST);
+        return $this->responseTrait($model);
     }
 
     public function update(Request $request,$id){
@@ -53,15 +44,7 @@ class ContentsToTypeController extends Controller
                 ]);
             }
 
-            return $result
-                ? response()->json([
-                    'code' => 200,
-                    'message' => 'ContentType düzenleme işleminiz başarılı bir şekilde gerçekleştirilmiştir.'
-                ],200)
-                : response()->json([
-                    'code' => 400,
-                    'message' => 'ContentType düzenleme işleminiz sırasında bir hata ile karşılaştık.Lütfen daha sonra tekrar deneyiniz.'
-                ],400);
+            return $this->responseTrait($result);
         }
     }
 

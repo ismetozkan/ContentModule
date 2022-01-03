@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Traits\ContentToTypeTrait;
 use App\Http\Traits\LogTrait;
+use App\Http\Traits\ResponseTrait;
 use App\Models\ContentTypes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -11,20 +12,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ContentTypesController extends Controller
 {
-    use LogTrait ,ContentToTypeTrait;
+    use LogTrait, ContentToTypeTrait, ResponseTrait;
     public function read()
     {
         $model= ContentTypes::all();
-        return $model->count() > 0
-            ? response()->json([
-                'code' => 200,
-                'message' => 'Başarılı',
-                'result' => $model->all()
-            ],Response::HTTP_OK)
-            : response()->json([
-                'code' => 400,
-                'message' => 'Gösterilecek içerik tipi bulunamadı.',
-            ],Response::HTTP_BAD_REQUEST);
+        return $this->responseTrait($model);
     }
 
     public function create(Request $request)
@@ -52,14 +44,7 @@ class ContentTypesController extends Controller
             ]);
             $result->save();
 
-            return response()->json([
-                'code' => $result ? 200 : 400,
-                'message' => $result
-                    ? 'Başarılı'
-                    : 'Başarısız',
-            ], $result
-                ? 200
-                : 400);
+            return $this->responseTrait($result);
         }
     }
 
@@ -82,15 +67,7 @@ class ContentTypesController extends Controller
         } else {
             $result = ContentTypes::where('id', $id)->update($request->all());
 
-            return $result
-                ? response()->json([
-                    'code' => 200,
-                    'message' => 'Başarılı.'
-                ], Response::HTTP_OK)
-                : response()->json([
-                    'code' => 400,
-                    'message' => 'Başarısız'
-                ], Response::HTTP_BAD_REQUEST);
+            return $this->responseTrait($result);
         }
     }
 
@@ -113,10 +90,7 @@ class ContentTypesController extends Controller
             $this->delType($result->id);
             $result->delete();
         }
-        return response()->json([
-            'code' => $result  ? 200 : 400,
-            'message' => $result ? 'Başarılı' : 'Başarısız',
-        ],$result ? 200 : 400);
+            return $this->responseTrait($result);
         }
     }
 

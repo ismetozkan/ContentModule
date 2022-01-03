@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ResponseTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -9,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
+    use ResponseTrait;
+
     public function read()
     {
         $model = User::all();
@@ -48,14 +51,7 @@ class UserController extends Controller
                 'conclusion'=>null,
             ]);
 
-            return response()->json([
-                'code' => $result ? 200 : 400,
-                'message' => $result
-                    ? 'Başarılı'
-                    : 'Başarısız',
-            ], $result
-                ? 200
-                : 400);
+            return $this->responseTrait($result);
         }
     }
 
@@ -63,16 +59,7 @@ class UserController extends Controller
     {
         $result = User::where('id',$request->get('id'))->update($request->all());
 
-        return response()->json([
-            'code' => $result
-                ? 200
-                : 400,
-            'message' => $result
-                ? 'Başarılı'
-                : 'Başarısız',
-        ],$result
-            ? 200
-            : 400);
+        return $this->responseTrait($result);
     }
 
 
@@ -80,25 +67,13 @@ class UserController extends Controller
     {
         $result=User::where('id',$id)->delete();
 
-        return response()->json([
-            'code' => $result  ? 200 : 400,
-            'message' => $result ? 'Başarılı' : 'Başarısız',
-        ],$result ? 200 : 400);
+        return $this->responseTrait($result);
     }
 
     public function view(Request $request,$id)
     {
         $model = User::where('id', $id)->get()->toArray();
-        return $model != null
-            ? response()->json([
-                'code' => 200,
-                'message' => 'Başarılı',
-                'result' => $model
-            ]) :
-            response()->json([
-                'code' => 400,
-                'message' => 'Gösterilecek veri bulunamadı.'
-            ]);
+        return $this->responseTrait($model);
     }
 
 }
