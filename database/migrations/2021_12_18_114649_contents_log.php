@@ -15,7 +15,7 @@ class ContentsLog extends Migration
     {
         Schema::create('contents_log', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->nullable();
+            $table->integer('user_id');
             $table->integer('content_id');
             $table->string('route_name');
             $table->mediumText('log');

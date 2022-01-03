@@ -12,6 +12,7 @@ class ContentTypes extends Model
     protected $table='content_types';
 
     protected $fillable = [
+        'title',
         'type',
         'template'
     ];
