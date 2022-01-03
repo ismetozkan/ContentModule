@@ -33,7 +33,8 @@ class ContentController extends Controller
         $rules = [
             'type_id' => 'required|integer',
             'title' => 'required|string',
-            'content'=>'required|string'
+            'content'=>'required|string',
+            'user_id' => 'required|integer'
         ];
 
         $validator = Validator::make($request->all(),$rules);
@@ -95,7 +96,8 @@ class ContentController extends Controller
     public function update(Request $request, $id){
         $rules = [
             'title' => 'nullable|string',
-            'content' => 'nullable|string'
+            'content' => 'nullable|string',
+            'user_id' => 'required|integer'
         ];
 
         $validator = Validator::make($request->all(),$rules);
@@ -133,8 +135,12 @@ class ContentController extends Controller
 
     public function delete(Request $request,$id)
     {
-        $result=Content::where('id',$id)->delete();
-        $result == 0 ?  : $this->delContToType($id) ;
+        $result=Content::where('id',$id)->first();
+        if($result != null){
+            $this->newLog($request->get('user_id'),$request->route()->getName(),$id, json_encode($request->header()));
+            $this->delContToType($id);
+            $result->delete();
+        }
         return response()->json([
             'code' => $result  ? 200 : 400,
             'message' => $result ? 'Başarılı' : 'Başarısız',
