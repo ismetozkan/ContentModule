@@ -31,7 +31,8 @@ class ContentTypesController extends Controller
     {
         $rules = [
             'title' => 'required|string',
-            'type'=>'required|in:blog,page,other',
+            'type'    => "required|array|min:1",
+            'type.*'  => "required|in:blog,page,other",
             'template'=>'required|string'
         ];
 
@@ -43,9 +44,10 @@ class ContentTypesController extends Controller
             ], Response::HTTP_BAD_REQUEST );
         } else {
             $result=new ContentTypes();
+
             $result->fill([
                 'title' => $request->get('title'),
-                'type' => $request->get('type'),
+                'type' => json_encode($request->get('type')),
                 'template' => $request->get('template')
             ]);
             $result->save();
