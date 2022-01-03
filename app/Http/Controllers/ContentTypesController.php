@@ -46,8 +46,7 @@ class ContentTypesController extends Controller
             $result->fill([
                 'title' => $request->get('title'),
                 'type' => $request->get('type'),
-                'template' => $request->get('template'),
-
+                'template' => $request->get('template')
             ]);
             $result->save();
 
@@ -109,8 +108,7 @@ class ContentTypesController extends Controller
         }else{
         $result=ContentTypes::where('id',$id)->first();
         if($result != null){
-            $this->newLog($request->get('user_id'),$request->route()->getName(),$id, json_encode($request->header()));
-            $this->delype($id);
+            $this->delType($result->id);
             $result->delete();
         }
         return response()->json([
