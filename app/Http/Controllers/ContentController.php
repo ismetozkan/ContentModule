@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Traits\ContentToTypeTrait;
 use App\Http\Traits\LogTrait;
+use App\Http\Traits\ResponseTrait;
 use App\Models\Content;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -13,7 +14,7 @@ use Illuminate\Support\Str;
 
 class ContentController extends Controller
 {
-    use LogTrait ,ContentToTypeTrait;
+    use LogTrait ,ContentToTypeTrait, ResponseTrait;
     public function read(){
         $model = Content::all();
         return $model->count() > 0
@@ -39,12 +40,9 @@ class ContentController extends Controller
         $validator = Validator::make($request->all(),$rules);
 
         if($validator->fails()){
-            return response()->json([
-                'code' => 400,
-                'message' => "Lütfen formunuzu kontrol ediniz.",
-                'result' => $validator->errors()
-            ]);
+           return $this->responseTrait(null,$validator->errors());
         }else{
+
             $result = new Content();
             $result->fill([
                 'title' => $request->get('title'),
@@ -59,37 +57,18 @@ class ContentController extends Controller
             }catch (\Exception $e){
                 return response()->json([
                     'code' => 400,
-                    'message' => "Başarısız" ,
+                    'message' => "Başarısız",
                     'error' => $e
                 ],Response::HTTP_BAD_REQUEST);
             }
 
-            return $result ?
-                response()->json([
-                'code' => 200,
-                'message' => "Başarılı",
-                'result' => $result
-            ],Response::HTTP_OK) :
-                response()->json([
-                    'code' => 400,
-                    'message' => "Başarısız"
-                ],Response::HTTP_BAD_REQUEST);
-
+            return $this->responseTrait($result);
         }
     }
 
     public function view($id){
         $model = Content::where('id',$id)->get()->toArray();
-        return $model != null
-            ?  response()->json([
-                'code' => 200,
-                'message' => 'Başarılı',
-                'result' => $model
-            ]) :
-                response()->json([
-                    'code' => 400,
-                    'message' => 'Gösterilecek veri bulunamadı.'
-                ]);
+        return $this->responseTrait($model);
     }
 
     public function update(Request $request, $id){
@@ -103,11 +82,7 @@ class ContentController extends Controller
 
         if($validator->fails())
         {
-            return response()->json([
-                'code' => 400,
-                'message' => 'Lütfen formunuzu kontrol ediniz.',
-                'result' => $validator->errors()
-            ]);
+            return $this->responseTrait(null,$validator->errors());
         }else{
             $result = Content::where('id',$id)->first();
 
@@ -119,16 +94,7 @@ class ContentController extends Controller
                     'slug' => $request->get('title') ? Str::slug($request->get('title'),"-") : $result->slug
                 ]);
             }
-
-            return $result
-                ? response()->json([
-                    'code' => 200,
-                    'message' => 'Content düzenleme işleminiz başarılı bir şekilde gerçekleştirilmiştir.'
-                ],200)
-                : response()->json([
-                    'code' => 400,
-                    'message' => 'Content düzenleme işleminiz sırasında bir hata ile karşılaştık.Lütfen daha sonra tekrar deneyiniz.'
-                ],400);
+            return $this->responseTrait($result);
         }
     }
 
@@ -140,11 +106,7 @@ class ContentController extends Controller
 
         if($validator->fails())
         {
-            return response()->json([
-                'code' => 400,
-                'message' => 'Lütfen formunuzu kontrol ediniz.',
-                'result' => $validator->errors()
-            ]);
+            return $this->responseTrait(null,$validator->errors());
         }else{
         $result=Content::where('id',$id)->first();
         if($result != null){
@@ -152,11 +114,7 @@ class ContentController extends Controller
             $this->delCont($id);
             $result->delete();
         }
-        return response()->json([
-            'code' => $result  ? 200 : 400,
-            'message' => $result ? 'Başarılı' : 'Başarısız',
-        ],$result ? 200 : 400);
-    }
+            return $this->responseTrait($result);
+            }
         }
-
 }
