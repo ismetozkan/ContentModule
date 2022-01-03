@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ContentToTypeTrait;
 use App\Http\Traits\LogTrait;
 use App\Models\Content;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Str;
 ////LOG TUTULACAK. YAPILMADI DAHA. TRAİT YAZ T-LOG ADINDA. LOG FONKSİYONUNA ARRAY GÖNDER PARAMETRE
 
 
 class ContentController extends Controller
 {
-    use LogTrait;
+    use LogTrait ,ContentToTypeTrait;
     public function read(){
         $model = Content::all();
         return $model->count() > 0
@@ -29,10 +30,9 @@ class ContentController extends Controller
     }
 
     public function create(Request $request){
-
         $rules = [
+            'type_id' => 'required|integer',
             'title' => 'required|string',
-            'slug' => 'required|string',
             'content'=>'required|string'
         ];
 
@@ -45,16 +45,17 @@ class ContentController extends Controller
                 'result' => $validator->errors()
             ]);
         }else{
-                $result = new Content();
-                $result->fill([
-                    'title' => $request->get('title'),
-                    'slug' => $request->get('slug'),
-                    'content'=>$request->get('content'),
-                ]);
+            $result = new Content();
+            $result->fill([
+                'title' => $request->get('title'),
+                'slug' => Str::slug($request->get('title'), '-'),
+                'content'=>$request->get('content')
+            ]);
 
             try {
                 $result->save();
                 $this->newLog($request->get('user_id'),$request->route()->getName(),$result->id, json_encode($request->header()));
+                $this->newContToType($request->get('type_id'),$result->id);
             }catch (\Exception $e){
                 return response()->json([
                     'code' => 400,
@@ -77,7 +78,7 @@ class ContentController extends Controller
         }
     }
 
-    public function view(Request $request,$id){
+    public function view($id){
         $model = Content::where('id',$id)->get()->toArray();
         return $model != null
             ?  response()->json([
@@ -94,8 +95,7 @@ class ContentController extends Controller
     public function update(Request $request, $id){
         $rules = [
             'title' => 'nullable|string',
-            'slug' => 'nullable|string',
-            'content' => 'nullable|string',
+            'content' => 'nullable|string'
         ];
 
         $validator = Validator::make($request->all(),$rules);
@@ -108,9 +108,16 @@ class ContentController extends Controller
                 'result' => $validator->errors()
             ]);
         }else{
-            $result = Content::where('id',$id)->update($request->all());
-            if($result != 0)
-                $this->newLog($request->get('user_id'),$request->route()->getName(),$result->id, json_encode($request->header()));
+            $result = Content::where('id',$id)->first();
+
+            if($result != null){
+                $this->newLog($request->get('user_id'),$request->route()->getName(),$id, json_encode($request->header()));
+                $result->update([
+                    'title' => $request->get('title') ? $request->get('title') : $result->title,
+                    'content' => $request->get('content') ? $request->get('content') : $result->content,
+                    'slug' => $request->get('title') ? Str::slug($request->get('title'),"-") : $result->slug
+                ]);
+            }
 
             return $result
                 ? response()->json([
@@ -127,7 +134,7 @@ class ContentController extends Controller
     public function delete(Request $request,$id)
     {
         $result=Content::where('id',$id)->delete();
-
+        $result == 0 ?  : $this->delContToType($id) ;
         return response()->json([
             'code' => $result  ? 200 : 400,
             'message' => $result ? 'Başarılı' : 'Başarısız',

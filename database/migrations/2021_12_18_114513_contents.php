@@ -16,7 +16,7 @@ class Contents extends Migration
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('slug');
+            $table->string('slug')->nullable();
             $table->mediumText('content');
             $table->timestamps();
         });

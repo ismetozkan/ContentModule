@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ContentTypesController extends Controller
 {
-    public function read(Request $request)
+    public function read()
     {
         $model= ContentTypes::all();
         return $model->count() > 0
@@ -27,6 +27,7 @@ class ContentTypesController extends Controller
     public function create(Request $request)
     {
         $rules = [
+            'title' => 'required|string',
             'type'=>'required|in:blog,page,other',
             'template'=>'required|string'
         ];
@@ -40,13 +41,13 @@ class ContentTypesController extends Controller
         } else {
             $result=new ContentTypes();
             $result->fill([
+                'title' => $request->get('title'),
                 'type' => $request->get('type'),
                 'template' => $request->get('template'),
 
             ]);
             $result->save();
             $result->typeToLog()->create([
-
                 'user_id' => $request->get('user_id'),
                 'content_id' => $request->get('content_id'),
                 'route_name'=>$request->route()->getName(),
@@ -67,6 +68,7 @@ class ContentTypesController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
+            'title' => 'nullable|string',
             'type' => 'nullable|string|in:blog,page,other',
             'template' => 'nullable|string',
         ];
