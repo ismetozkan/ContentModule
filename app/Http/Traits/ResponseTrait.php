@@ -10,7 +10,7 @@ trait ResponseTrait
                 'code' => 400,
                 'message' => "Lütfen formunuzu kontrol ediniz.",
                 'error' => $errors
-            ]);
+            ],Response::HTTP_BAD_REQUEST);
         }else{
             return $result ? response()->json([
                 'code' => 200,

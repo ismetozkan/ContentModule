@@ -16,7 +16,7 @@ class ContentTypes extends Migration
         Schema::create('content_types', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->json('type');
+            $table->enum('type',['page','blog','other']);
             $table->text('template');
             $table->timestamps();
         });

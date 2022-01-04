@@ -7,7 +7,6 @@ use App\Models\Content;
 use App\Models\ContentToType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\Response;
 
 class ContentsToTypeController extends Controller
 {
@@ -16,7 +15,9 @@ class ContentsToTypeController extends Controller
     public function read()
     {
         $model = ContentToType::all();
-        return $this->responseTrait($model);
+        return $model->count() > 0
+            ? $this->responseTrait($model)
+            : $this->responseTrait();
     }
 
     public function update(Request $request,$id){
@@ -29,13 +30,9 @@ class ContentsToTypeController extends Controller
 
         if($validator->fails())
         {
-            return response()->json([
-                'code' => 400,
-                'message' => 'Lütfen formunuzu kontrol ediniz.',
-                'result' => $validator->errors()
-            ]);
+            return $this->responseTrait(null,$validator->errors());
         }else{
-            $result = Content::where('id',$id)->first();
+            $result = ContentToType::where('id',$id)->first();
 
             if($result != null){
                 $result->update([

@@ -22,6 +22,7 @@ class ContentsLog extends Migration
             $table->integer('content_id');
             $table->string('route_name');
             $table->mediumText('log');
+            $table->mediumText('info');
             $table->timestamps();
         });
     }

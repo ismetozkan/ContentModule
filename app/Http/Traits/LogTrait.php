@@ -3,16 +3,16 @@
 namespace App\Http\Traits;
 
 use App\Models\ContentLog;
-use GuzzleHttp\Psr7\Request;
 
 trait LogTrait
 {
-    public function newLog($user_id = null,$route,$content_id ,$log){
+    public function newLog($request,$content_id){
         ContentLog::create([
-            'user_id' => $user_id,
-            'route_name' => $route,
+            'user_id' => $request->get('user_id'),
+            'route_name' => $request->route()->getName(),
             'content_id' => $content_id,
-            'log' => $log
+            'log' => json_encode($request->all()),
+            'info' => json_encode($request->header())
         ]);
 
     }

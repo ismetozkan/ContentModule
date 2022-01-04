@@ -16,30 +16,28 @@ class ContentTypesController extends Controller
     public function read()
     {
         $model= ContentTypes::all();
-        return $this->responseTrait($model);
+        return $model->count() > 0
+            ? $this->responseTrait($model)
+            : $this->responseTrait();
     }
 
     public function create(Request $request)
     {
         $rules = [
             'title' => 'required|string',
-            'type'    => "required|array|min:1",
-            'type.*'  => "required|in:blog,page,other",
+            'type'    => 'required|string|in:blog,page,other',
             'template'=>'required|string'
         ];
 
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return response()->json([
-                'code' => 400,
-                'message' => $validator->errors()->messages()
-            ], Response::HTTP_BAD_REQUEST );
+            return $this->responseTrait(null,$validator->errors());
         } else {
             $result=new ContentTypes();
 
             $result->fill([
                 'title' => $request->get('title'),
-                'type' => json_encode($request->get('type')),
+                'type' => $request->get('type'),
                 'template' => $request->get('template')
             ]);
             $result->save();
@@ -59,13 +57,16 @@ class ContentTypesController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json([
-                'code' => 400,
-                'message' => 'Lütfen formunuzu kontrol ediniz.',
-                'result' => $validator->errors()
-            ]);
+            return $this->responseTrait(null,$validator->errors());
         } else {
-            $result = ContentTypes::where('id', $id)->update($request->all());
+            $result = ContentTypes::where('id',$id)->first();
+            $result->update([
+                'title' => $request->get('title') ? $request->get('title') : $result->title,
+                'type' => $request->get('type') ? $request->get('type') : $result->type,
+                'template' => $request->get('template') ? $request->get('template') : $result->template
+
+            ]);
+
 
             return $this->responseTrait($result);
         }
@@ -79,11 +80,7 @@ class ContentTypesController extends Controller
 
         if($validator->fails())
         {
-            return response()->json([
-                'code' => 400,
-                'message' => 'Lütfen formunuzu kontrol ediniz.',
-                'result' => $validator->errors()
-            ]);
+            return $this->responseTrait(null,$validator->errors());
         }else{
         $result=ContentTypes::where('id',$id)->first();
         if($result != null){
@@ -97,15 +94,6 @@ class ContentTypesController extends Controller
     public function view($id)
     {
         $model = ContentTypes::where('id', $id)->get()->toArray();
-        return $model
-            ? response()->json([
-                'code' => 200,
-                'message' => 'Başarılı',
-                'result' => $model
-            ]) :
-            response()->json([
-                'code' => 400,
-                'message' => 'Gösterilecek veri bulunamadı.'
-            ]);
+        return $this->responseTrait($model);
     }
 }
