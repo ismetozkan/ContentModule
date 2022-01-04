@@ -74,9 +74,7 @@ class ContentTypesController extends Controller
 
     public function delete(Request $request,$id)
     {
-        $validator = Validator::make($request->all(),[
-            'user_id' => 'required|integer'
-        ]);
+        $validator = Validator::make($request->all(),[]);
 
         if($validator->fails())
         {

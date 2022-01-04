@@ -18,8 +18,10 @@ class ContentsLog extends Migration
     {
         Schema::create('contents_log', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('content_id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete ('cascade');
+            $table->unsignedBigInteger('content_id');
+            $table->foreign('content_id')->references('id')->on('contents')->onDelete ('cascade');
             $table->string('route_name');
             $table->mediumText('log');
             $table->mediumText('info');

@@ -16,7 +16,8 @@ class ContentsToTypes extends Migration
     {
         Schema::create('contents_to_types', function (Blueprint $table) {
             $table->id();
-            $table->integer('content_id');
+            $table->unsignedBigInteger('content_id');
+            $table->foreign('content_id')->references('id')->on('contents')->onDelete ('cascade');
             $table->integer('type_id');
             $table->timestamps();
         });
