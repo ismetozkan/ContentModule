@@ -14,7 +14,6 @@ class ContentLog extends Model
     protected $fillable=[
         'user_id',
         'route_name',
-        'content_id',
         'log',
         'info'
     ];

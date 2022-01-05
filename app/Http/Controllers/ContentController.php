@@ -98,13 +98,15 @@ class ContentController extends Controller
         {
             return $this->responseTrait(null,$validator->errors());
         }else{
-        $result=Content::where('id',$id)->first();
-        if($result != null){
-            $this->newLog($request,$result->id);
-            $this->delCont($id);
-            $result->delete();
-        }
-            return $this->responseTrait($result);
+            $result = Content::where('id',$id)->delete();
+            if($result){
+                $this->newLog($request,$id);
+                $this->delCont($id);
+
+                return $this->responseTrait($result);
+            }else{
+                return $this->responseTrait($result);
             }
         }
+    }
 }

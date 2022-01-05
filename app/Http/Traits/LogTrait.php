@@ -7,10 +7,9 @@ use App\Models\ContentLog;
 trait LogTrait
 {
     public function newLog($request,$content_id){
-        ContentLog::create([
+        return ContentLog::create([
             'user_id' => $request->get('user_id'),
             'route_name' => $request->route()->getName(),
-            'content_id' => $content_id,
             'log' => json_encode($request->all()),
             'info' => json_encode($request->header())
         ]);
